@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./../styleCss/Sidebar.css";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import CreateIcon from "@material-ui/icons/Create";
@@ -12,8 +12,52 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import BookmarkBorderIcon from "@material-ui/icons/BookmarkBorder";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import AddIcon from "@material-ui/icons/Add";
+import axios from "./../axios";
+import Pusher from "pusher-js";
 
 function Sidebar() {
+  const [channels, setChannel] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/rooms/get");
+      const data = await response.data;
+      setChannel(
+        data.map((item) => ({
+          id: item._id,
+          name: item.rname,
+        }))
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //   applyiing pusher
+
+  useEffect(() => {
+    const pusher = new Pusher("3e9e59fcb70fcd44553b", {
+      cluster: "ap2",
+    });
+
+    const channel = pusher.subscribe("rooms");
+    channel.bind("inserted", function (newRooms) {
+      //   alert(JSON.stringify(newRooms));
+      setChannel([...channels, { id: newRooms._id, name: newRooms.rname }]);
+    });
+
+    return () => {
+      channel.unbind_all();
+      // channel.unsubscribe();
+    };
+  }, [channels]);
+
+  console.log(channels);
   return (
     <div className="sidebar">
       <div className="sidebar__header">
@@ -35,7 +79,13 @@ function Sidebar() {
       <SidebarOption Icon={FileCopyIcon} title="File browser" />
       <SidebarOption Icon={ExpandLessIcon} title="Show less" />
       <hr />
-      <SidebarOption Icon={ExpandMoreIcon} title="Channel" />
+      <SidebarOption Icon={ExpandMoreIcon} title="Show more" />
+      <hr />
+      <SidebarOption Icon={AddIcon} title="Channel" />
+
+      {channels.map((channel) => {
+        return <SidebarOption key={channel.id} title={channel.name} />;
+      })}
     </div>
   );
 }
