@@ -1,15 +1,25 @@
 import React, { useState } from "react";
 import "./../styleCss/ChatInput.css";
+import axios from "./../axios";
+import { useStateValue } from "../StateProvider";
 
 function ChatInput({ channelName, channelId }) {
   const [input, setInput] = useState("");
+  const [{ user }] = useStateValue();
 
-  const sendMessage = (e) => {
+  const sendMessage = async (e) => {
     e.preventDefault();
 
-    if(channelId){
-        
+    if (channelId) {
+      const data = await axios.post(`/api/room/message/${channelId}`, {
+        message: input,
+        username: user.displayName,
+        userimg: user.photoURL,
+      });
+      console.log(data);
     }
+
+    setInput("");
   };
 
   return (

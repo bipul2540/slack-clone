@@ -15,6 +15,8 @@ const roomSchema = new mongoose.Schema({
 
       userimg: {
         type: String,
+        default:
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRldFmaG9uIYcgHKm98x9BRQVo1zjtEnvIGNg&usqp=CAU",
       },
       date: {
         type: Date,

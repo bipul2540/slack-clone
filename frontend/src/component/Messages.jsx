@@ -3,7 +3,7 @@ import "./../styleCss/Messages.css";
 function Messages({ message, date, username, userimg }) {
   return (
     <div className="message">
-      <img src={userimg} alt="userimage" />
+      <img src={userimg} alt="userimage" className="userimage" />
       <div className="messsage__info">
         <h4>
           {username}

@@ -36,9 +36,14 @@ db.once("open", async () => {
         pusher.trigger("rooms", "inserted", {
           _id: allRoomData._id,
           rname: allRoomData.rname,
-          messages: {
-            message: allRoomData.messages.message,
-          },
+        });
+
+        pusher.trigger("messages", "inserted", {
+          messages: [
+            {
+              message: allRoomData.message
+            }
+          ],
         });
       } else {
         console.log("Error triggering pusher");

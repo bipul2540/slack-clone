@@ -18,7 +18,7 @@ import Pusher from "pusher-js";
 import { useStateValue } from "../StateProvider";
 
 function Sidebar() {
-  const [channels, setChannel] = useState([]);
+  const [rooms, setRooms] = useState([]);
   const [{ user }] = useStateValue();
 
   useEffect(() => {
@@ -29,12 +29,14 @@ function Sidebar() {
     try {
       const response = await axios.get("/api/rooms/get");
       const data = await response.data;
-      setChannel(
+      setRooms(
         data.map((item) => ({
           id: item._id,
           name: item.rname,
         }))
       );
+
+      console.log("data from the sidebar is ", data);
     } catch (error) {
       console.log(error);
     }
@@ -49,17 +51,15 @@ function Sidebar() {
 
     const channel = pusher.subscribe("rooms");
     channel.bind("inserted", function (newRooms) {
-      //   alert(JSON.stringify(newRooms));
-      setChannel([...channels, { id: newRooms._id, name: newRooms.rname }]);
+      setRooms([...rooms, { id: newRooms._id, name: newRooms.rname }]);
     });
 
     return () => {
       channel.unbind_all();
       // channel.unsubscribe();
     };
-  }, [channels]);
+  }, [rooms]);
 
-  console.log(channels);
   return (
     <div className="sidebar">
       <div className="sidebar__header">
@@ -85,14 +85,8 @@ function Sidebar() {
       <hr />
       <SidebarOption Icon={AddIcon} addChannelOption title="Channel" />
 
-      {channels.map((channel) => {
-        return (
-          <SidebarOption
-            key={channel.id}
-            id={channel.id}
-            title={channel.name}
-          />
-        );
+      {rooms.map((room) => {
+        return <SidebarOption key={room.id} id={room.id} title={room.name} />;
       })}
     </div>
   );

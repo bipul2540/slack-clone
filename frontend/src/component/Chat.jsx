@@ -6,6 +6,7 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import axios from "./../axios";
 import Messages from "./Messages";
 import ChatInput from "./ChatInput";
+import Pusher from "pusher-js";
 
 function Chat() {
   const { roomId } = useParams();
@@ -26,8 +27,23 @@ function Chat() {
     getData();
   }, [roomId]);
 
-  console.log("room details is:-", roomDetails);
-  console.log("room messages is:-", roomMessages);
+
+  useEffect(() => {
+    const pusher = new Pusher("3e9e59fcb70fcd44553b", {
+      cluster: "ap2",
+    });
+
+    const channel = pusher.subscribe("rooms");
+    channel.bind("inserted", function (newChats) {
+      alert(JSON.stringify(newChats));
+      setRoomMessages([...roomMessages, { message: newChats.message }]);
+    });
+
+    return () => {
+      channel.unbind_all();
+      // channel.unsubscribe();
+    };
+  }, [roomMessages]);
 
   return (
     <div className="chat">
@@ -59,7 +75,7 @@ function Chat() {
             })
           : ""}
       </div>
-      <ChatInput channelName={roomDetails?.rname} />
+      <ChatInput channelName={roomDetails?.rname} channelId={roomId} />
     </div>
   );
 }
