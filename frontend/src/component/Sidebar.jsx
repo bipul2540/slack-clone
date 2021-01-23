@@ -15,9 +15,11 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import AddIcon from "@material-ui/icons/Add";
 import axios from "./../axios";
 import Pusher from "pusher-js";
+import { useStateValue } from "../StateProvider";
 
 function Sidebar() {
   const [channels, setChannel] = useState([]);
+  const [{ user }] = useStateValue();
 
   useEffect(() => {
     fetchData();
@@ -65,7 +67,7 @@ function Sidebar() {
           <h2>Cleaver Programmer</h2>
           <h3>
             <FiberManualRecordIcon />
-            Bipul kumar
+            {user?.displayName}
           </h3>
         </div>
         <CreateIcon />

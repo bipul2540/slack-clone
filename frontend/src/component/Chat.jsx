@@ -5,6 +5,7 @@ import StarBorderIcon from "@material-ui/icons/StarBorder";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import axios from "./../axios";
 import Messages from "./Messages";
+import ChatInput from "./ChatInput";
 
 function Chat() {
   const { roomId } = useParams();
@@ -47,7 +48,7 @@ function Chat() {
         {roomMessages ? (
           <Messages
             key={roomMessages._id}
-            message={roomMessages?.messages?.message}
+            message={roomMessages.messages.message}
             username={roomMessages.messages.username}
             userimg={roomMessages.messages.userimg}
             date={roomMessages.messages.date}
@@ -56,6 +57,7 @@ function Chat() {
           ""
         )}
       </div>
+      <ChatInput channelName={roomDetails?.rname} />
     </div>
   );
 }
