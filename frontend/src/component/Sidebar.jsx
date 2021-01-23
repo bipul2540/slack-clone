@@ -81,10 +81,16 @@ function Sidebar() {
       <hr />
       <SidebarOption Icon={ExpandMoreIcon} title="Show more" />
       <hr />
-      <SidebarOption Icon={AddIcon} title="Channel" />
+      <SidebarOption Icon={AddIcon} addChannelOption title="Channel" />
 
       {channels.map((channel) => {
-        return <SidebarOption key={channel.id} title={channel.name} />;
+        return (
+          <SidebarOption
+            key={channel.id}
+            id={channel.id}
+            title={channel.name}
+          />
+        );
       })}
     </div>
   );
