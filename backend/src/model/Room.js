@@ -4,22 +4,24 @@ const roomSchema = new mongoose.Schema({
   rname: {
     type: String,
   },
-  messages: {
-    message: {
-      type: String,
-    },
-    username: {
-      type: String,
-    },
+  messages: [
+    {
+      message: {
+        type: String,
+      },
+      username: {
+        type: String,
+      },
 
-    userimg: {
-      type: String,
+      userimg: {
+        type: String,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
     },
-    date: {
-      type: Date,
-      default: Date.now,
-    },
-  },
+  ],
 });
 
 module.exports = mongoose.model("Room", roomSchema);

@@ -49,10 +49,12 @@ router.get("/room/messages/:id", async (req, res) => {
 });
 
 // inserting message
-
 router.post("/room/message/:id", async (req, res) => {
+  const data = req.body;
   const _id = req.params.id;
   const room = await Room.findById(_id);
+  const insert = await room.updateOne({ $push: { messages: data } });
+  res.status(200).send(insert);
 });
 
 module.exports = router;

@@ -21,7 +21,7 @@ function Chat() {
 
       // get only messages  in sorted format
       const response = await axios.get(`/api/room/messages/${roomId}`);
-      setRoomMessages(response.data);
+      setRoomMessages(response.data.messages);
     };
     getData();
   }, [roomId]);
@@ -45,17 +45,19 @@ function Chat() {
         </div>
       </div>
       <div className="chat__messages">
-        {roomMessages ? (
-          <Messages
-            key={roomMessages._id}
-            message={roomMessages.messages.message}
-            username={roomMessages.messages.username}
-            userimg={roomMessages.messages.userimg}
-            date={roomMessages.messages.date}
-          />
-        ) : (
-          ""
-        )}
+        {roomMessages
+          ? roomMessages.map((message) => {
+              return (
+                <Messages
+                  key={message._id}
+                  message={message.message}
+                  username={message.username}
+                  userimg={message.userimg}
+                  date={message.date}
+                />
+              );
+            })
+          : ""}
       </div>
       <ChatInput channelName={roomDetails?.rname} />
     </div>
